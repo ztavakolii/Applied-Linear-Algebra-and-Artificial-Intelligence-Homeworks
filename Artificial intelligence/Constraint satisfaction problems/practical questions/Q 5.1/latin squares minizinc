@@ -1,0 +1,17 @@
+% Use this editor as a MiniZinc scratch book
+include "alldifferent.mzn";
+int: n;
+array[1..n,1..n] of var 1..n:x;
+array[1..n,1..n] of var 1..n:y;
+constraint forall(i in 1..n)(alldifferent([x[i,j]| j in 1..n]));
+constraint forall(j in 1..n)(alldifferent([x[i,j]| i in 1..n]));
+constraint forall(i in 1..n)(alldifferent([y[i,j]| j in 1..n]));
+constraint forall(j in 1..n)(alldifferent([y[i,j]| i in 1..n]));
+constraint forall(i in 1..n, j in 1..n) (
+        forall(r in 1..n, s in 1..n) (
+         (i != r \/ j != s) ->
+        (x[i,j] != x[r,s] \/ y[i,j] != y[r,s])
+        )
+    );
+
+solve satisfy;
